@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Users\hagye\Desktop\DIGIPEN\포폴\프젝\cs200_hakyung.kim_classproject\x64\Debug\HagyeongEngine.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\hagye\Desktop\DIGIPEN\포폴\프젝\cs200_hakyung.kim_classproject\x64\Debug\pixelshader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\hagye\Desktop\DIGIPEN\포폴\프젝\cs200_hakyung.kim_classproject\x64\Debug\vertexshader.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

@@ -1,0 +1,22 @@
+﻿  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_impl_glfw.cpp
+  imgui_impl_opengl3.cpp
+  imgui_tables.cpp
+  imgui_widgets.cpp
+  DrawScene.cpp
+  GLApplication.cpp
+  Mesh.cpp
+  OBJReader.cpp
+  Scene.cpp
+  Texture.cpp
+  shader.cpp
+  Generating Code...
+  LINK : C:\Users\hagye\Desktop\hagyeong.kim_CS300_2\x64\Debug\CS300 Project.exe not found or not built by the last incremental link; performing full link
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  CS300 Project.vcxproj -> C:\Users\hagye\Desktop\hagyeong.kim_CS300_2\x64\Debug\CS300 Project.exe
+  ..\ThirdParty\GLFW\glfw3.dll
+  1개 파일이 복사되었습니다.
+  ..\ThirdParty\GLEW\glew32.dll
+  1개 파일이 복사되었습니다.
