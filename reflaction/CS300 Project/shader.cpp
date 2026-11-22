@@ -3,12 +3,12 @@ Copyright (C) 2021 DigiPen Institute of Technology.
 Reproduction or disclosure of this file or its contents without the prior written
 consent of DigiPen Institute of Technology is prohibited.
 File Name: shader.cpp
-Purpose: load shader file
-Language: C++, Visual Studio 2019
-Platform: Visual Studio 2019 16.11.2, Windows 10
-Project: CS300 Project
-Author: Hagyeong Kim (hagyeong.kim@digipen.edu, 180002221)
-Creation date: 09/23/2021
+Purpose: Create shader for render
+Language: C++
+Platform: VisualStudio 2019 / Window
+Project: uijin.lee_CS300_2
+Author: Uijin Lee, uijn.lee, 180003221
+Creation date: Nov 11st, 2021
 End Header --------------------------------------------------------*/
 #include <cstdio>
 #include <string>
@@ -20,28 +20,16 @@ using namespace std;
 
 #include <cstdlib>
 #include <cstring>
+
 #include <GL/glew.h>
+
 #include "shader.hpp"
 
-Shader::Shader()
-{
-}
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
-Shader::~Shader()
-{
-}
-
-void Shader::noShader()
-{
-    glUseProgram(0);
-}
-
-void Shader::shaderUse(GLuint programID)
-{
-    glUseProgram(programID);
-}
-
-GLuint Shader::LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
+GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 {
     // Create the shaders
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -58,7 +46,6 @@ GLuint Shader::LoadShaders(const char* vertex_file_path, const char* fragment_fi
     }
     else {
         printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
-        getchar();
         return 0;
     }
 
@@ -86,7 +73,7 @@ GLuint Shader::LoadShaders(const char* vertex_file_path, const char* fragment_fi
     glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
     glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0) {
-        std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
+        std::vector<char> VertexShaderErrorMessage(static_cast<long long>(InfoLogLength) + 1);
         glGetShaderInfoLog(VertexShaderID, InfoLogLength, nullptr, &VertexShaderErrorMessage[0]);
         printf("%s\n", &VertexShaderErrorMessage[0]);
     }
@@ -102,7 +89,7 @@ GLuint Shader::LoadShaders(const char* vertex_file_path, const char* fragment_fi
     glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
     glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0) {
-        std::vector<char> FragmentShaderErrorMessage(InfoLogLength + 1);
+        std::vector<char> FragmentShaderErrorMessage(static_cast<long long>(InfoLogLength) + 1);
         glGetShaderInfoLog(FragmentShaderID, InfoLogLength, nullptr, &FragmentShaderErrorMessage[0]);
         printf("%s\n", &FragmentShaderErrorMessage[0]);
     }
@@ -119,7 +106,7 @@ GLuint Shader::LoadShaders(const char* vertex_file_path, const char* fragment_fi
     glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
     glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0) {
-        std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
+        std::vector<char> ProgramErrorMessage(static_cast<long long>(InfoLogLength) + 1);
         glGetProgramInfoLog(ProgramID, InfoLogLength, nullptr, &ProgramErrorMessage[0]);
         printf("%s\n", &ProgramErrorMessage[0]);
     }
@@ -138,7 +125,7 @@ GLuint Shader::LoadShaders(const char* vertex_file_path, const char* fragment_fi
 ///////////////////////////////////////////////////
 ///////////////////////////////////////////////////
 
-GLuint Shader::LoadPipeline(const char* vertex_file_path, const char* fragment_file_path, GLuint* programIDs)
+GLuint LoadPipeline(const char* vertex_file_path, const char* fragment_file_path, GLuint* programIDs)
 {
     // Hardcoding the values to 2
 
@@ -157,7 +144,6 @@ GLuint Shader::LoadPipeline(const char* vertex_file_path, const char* fragment_f
     }
     else {
         printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
-        getchar();
         return 0;
     }
 
@@ -174,7 +160,7 @@ GLuint Shader::LoadPipeline(const char* vertex_file_path, const char* fragment_f
     glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
     glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0) {
-        std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
+        std::vector<char> VertexShaderErrorMessage(static_cast<long long>(InfoLogLength) + 1);
         glGetShaderInfoLog(VertexShaderID, InfoLogLength, nullptr, &VertexShaderErrorMessage[0]);
         printf("%s\n", &VertexShaderErrorMessage[0]);
     }
@@ -195,10 +181,11 @@ GLuint Shader::LoadPipeline(const char* vertex_file_path, const char* fragment_f
     glGetProgramiv(programIDs[0], GL_LINK_STATUS, &Result);
     glGetProgramiv(programIDs[0], GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0) {
-        std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
+        std::vector<char> ProgramErrorMessage(static_cast<long long>(InfoLogLength) + 1);
         glGetProgramInfoLog(programIDs[0], InfoLogLength, nullptr, &ProgramErrorMessage[0]);
         printf("%s\n", &ProgramErrorMessage[0]);
     }
+
 
     // Fragment Shader + Program
 
@@ -228,7 +215,7 @@ GLuint Shader::LoadPipeline(const char* vertex_file_path, const char* fragment_f
     glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
     glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0) {
-        std::vector<char> FragmentShaderErrorMessage(InfoLogLength + 1);
+        std::vector<char> FragmentShaderErrorMessage(static_cast<long long>(InfoLogLength) + 1);
         glGetShaderInfoLog(FragmentShaderID, InfoLogLength, nullptr, &FragmentShaderErrorMessage[0]);
         printf("%s\n", &FragmentShaderErrorMessage[0]);
     }
@@ -258,7 +245,9 @@ GLuint Shader::LoadPipeline(const char* vertex_file_path, const char* fragment_f
 ///////////////////////////////////////////////////
 ///////////////////////////////////////////////////
 
-GLuint Shader::LoadMultiShaders(const char* vertex_file_path, const char* fragment_file_path, const char* geom_file_path, Primitive_Enum /*out_primitive_type*/)
+GLuint LoadMultiShaders(const char* vertex_file_path, const char* fragment_file_path,
+    const char* geom_file_path,
+    Primitive_Enum out_primitive_type)
 {
     // Create the shaders
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -280,7 +269,6 @@ GLuint Shader::LoadMultiShaders(const char* vertex_file_path, const char* fragme
     {
         printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n",
             vertex_file_path);
-        getchar();
         return 0;
     }
 
@@ -295,6 +283,40 @@ GLuint Shader::LoadMultiShaders(const char* vertex_file_path, const char* fragme
         FragmentShaderStream.close();
     }
 
+
+    // array of char * to hold the strings
+    std::vector<const char*> shaderStrings;
+    shaderStrings.clear();
+
+    // First string
+    std::string geometryShaderHeader("#version 450 core\n"
+        "\n"
+        "const int maxVerts = 4;");
+    shaderStrings.push_back(geometryShaderHeader.c_str());
+
+    // Second string
+    std::string geometryInOut = "// Type of primitive input\n  // from VS (CPU)\n layout (points) in;";
+
+    std::string temp;
+    switch (out_primitive_type)
+    {
+    case Primitive_Enum::TriangleStrip:
+        temp = "triangle_strip";
+        break;
+
+    case Primitive_Enum::LineStrip:
+        temp = "line_strip";
+        break;
+
+    case Primitive_Enum::Points:
+        temp = "points";
+        break;
+    };
+
+    geometryInOut += "layout (" + temp + ", max_vertices = maxVerts) out;\n";
+    shaderStrings.push_back(geometryInOut.c_str());
+
+    // Third string
     // Read the Geometry Shader from the file
     std::string GeometryShaderCode;
     std::ifstream GeometryShaderStream(geom_file_path, std::ios::in);
@@ -306,7 +328,9 @@ GLuint Shader::LoadMultiShaders(const char* vertex_file_path, const char* fragme
         GeometryShaderStream.close();
     }
 
+    shaderStrings.push_back(GeometryShaderCode.c_str());
     //////////////////////////////////////////////////////////
+
 
     GLint Result = GL_FALSE;
     int InfoLogLength;
@@ -323,7 +347,7 @@ GLuint Shader::LoadMultiShaders(const char* vertex_file_path, const char* fragme
     glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0)
     {
-        std::vector<char> VertexShaderErrorMessage(static_cast<unsigned long>(InfoLogLength + 1));
+        std::vector<char> VertexShaderErrorMessage(static_cast<long long>(InfoLogLength) + 1);
         glGetShaderInfoLog(VertexShaderID, InfoLogLength, nullptr, &VertexShaderErrorMessage[0]);
         printf("%s\n", &VertexShaderErrorMessage[0]);
     }
@@ -331,8 +355,8 @@ GLuint Shader::LoadMultiShaders(const char* vertex_file_path, const char* fragme
 
     // Compile Geometry Shader
     printf("Compiling shader : %s\n", geom_file_path);
-    char const* GeometrySourcePointer = GeometryShaderCode.c_str(); //GeometryShaderCode.c_str();
-    glShaderSource(GeometryShaderID, 1, &GeometrySourcePointer, nullptr);
+    char const** GeometrySourcePointer = shaderStrings.data(); //GeometryShaderCode.c_str();
+    glShaderSource(GeometryShaderID, 3, GeometrySourcePointer, nullptr);
     glCompileShader(GeometryShaderID);
 
     // Check Fragment Shader
@@ -340,7 +364,7 @@ GLuint Shader::LoadMultiShaders(const char* vertex_file_path, const char* fragme
     glGetShaderiv(GeometryShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0)
     {
-        std::vector<char> GeometryShaderErrorMessage((unsigned long)(InfoLogLength + 1));
+        std::vector<char> GeometryShaderErrorMessage(static_cast<long long>(InfoLogLength) + 1);
         glGetShaderInfoLog(GeometryShaderID, InfoLogLength, nullptr, &GeometryShaderErrorMessage[0]);
         printf("%s\n", &GeometryShaderErrorMessage[0]);
     }
@@ -357,7 +381,7 @@ GLuint Shader::LoadMultiShaders(const char* vertex_file_path, const char* fragme
     glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0)
     {
-        std::vector<char> FragmentShaderErrorMessage(static_cast<unsigned long>(InfoLogLength + 1));
+        std::vector<char> FragmentShaderErrorMessage(static_cast<long long>(InfoLogLength) + 1);
         glGetShaderInfoLog(FragmentShaderID, InfoLogLength, nullptr, &FragmentShaderErrorMessage[0]);
         printf("%s\n", &FragmentShaderErrorMessage[0]);
     }
@@ -375,7 +399,7 @@ GLuint Shader::LoadMultiShaders(const char* vertex_file_path, const char* fragme
     glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0)
     {
-        std::vector<char> ProgramErrorMessage(static_cast<unsigned long>(InfoLogLength + 1));
+        std::vector<char> ProgramErrorMessage(static_cast<long long>(InfoLogLength) + 1);
         glGetProgramInfoLog(ProgramID, InfoLogLength, nullptr, &ProgramErrorMessage[0]);
         printf("%s\n", &ProgramErrorMessage[0]);
     }
@@ -391,19 +415,3 @@ GLuint Shader::LoadMultiShaders(const char* vertex_file_path, const char* fragme
 
     return ProgramID;
 }
-
-GLuint Shader::ReloadShaders(GLuint* program, const char* vertex_shader_filename, const char* fragment_shader_filename)
-{
-   // assert(program && vertex_shader_filename && fragment_shader_filename);
-
-    GLuint reloaded_program = LoadShaders(vertex_shader_filename, fragment_shader_filename);
-
-    if (reloaded_program) 
-    {
-        glDeleteProgram(*program);
-        *program = reloaded_program;
-    }
-
-    return reloaded_program;
-}
-

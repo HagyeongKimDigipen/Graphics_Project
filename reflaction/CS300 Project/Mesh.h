@@ -3,78 +3,83 @@ Copyright (C) 2021 DigiPen Institute of Technology.
 Reproduction or disclosure of this file or its contents without the prior written
 consent of DigiPen Institute of Technology is prohibited.
 File Name: Mesh.h
-Purpose: header of Mesh.cpp (draw shape and calculate normal)
-Language: C++, Visual Studio 2019
-Platform: Visual Studio 2019 16.11.2, Windows 10
-Project: CS300 Project
-Author: Hagyeong Kim (hagyeong.kim@digipen.edu, 180002221) //using framework
-Creation date: 09/23/2021
+Purpose: Create Mesh, calculate and provide mesh data
+Language: C++
+Platform: VisualStudio 2019 / Window
+Project: uijin.lee_CS300_3
+Author: Uijin Lee, uijn.lee, 180003221
+Creation date: Nov 11st, 2021
 End Header --------------------------------------------------------*/
-#pragma once
+#ifndef SIMPLE_OBJ_SCENE_MESH_H
+#define SIMPLE_OBJ_SCENE_MESH_H
 
-#include <filesystem>
 #include <vector>
-#include <gl/glew.h>
-#include <string>
-#include "shader.hpp"
+
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform.hpp>
+
 
 class Mesh
 {
 public:
-    GLfloat* getVertexBuffer();
-    GLfloat* getVertexNormals();
-    GLfloat* getVertexUVs();
+	friend class OBJReader;
+	friend class SceneManager;
+	friend class OBJLoader;
 
-    GLfloat* getVertexNormalsForDisplay();
+	// Get attribute values buffer
+	GLfloat* getVertexBuffer();             // attribute 0
+	GLfloat* getVertexNormals();            // attribute 1
+	GLfloat* getVertexUVs();                // attribute 2
 
-    unsigned int getVertexBufferSize();
-    unsigned int getVertexCount();
-    unsigned int getVertexNormalCount();
+	GLfloat* getVertexNormalsForDisplay();  // attribute 0
 
-    // Get vertex index buffer
-    GLuint* getIndexBuffer();
-    unsigned int getIndexBufferSize();
-    unsigned int getTriangleCount();
+	unsigned int getVertexBufferSize();
+	unsigned int getVertexCount();
+	unsigned int getVertexNormalCount();
 
-    glm::vec3   getModelScale();
-    glm::vec3   getModelCentroid();
-    glm::vec3   getCentroidVector(glm::vec3 vVertex);
+	// Get vertex index buffer
+	GLuint* getIndexBuffer();
+	unsigned int getIndexBufferSize();
+	unsigned int getTriangleCount();
+
+	glm::vec3   getModelScale();
+	glm::vec3   getModelCentroid();
+	glm::vec3   getCentroidVector(glm::vec3 vVertex);
 
 
-    GLfloat& getNormalLength();
-    void setNormalLength(GLfloat nLength);
+	GLfloat& getNormalLength();
+	void setNormalLength(GLfloat nLength);
 
-    // initialize the data members
-    void initData();
+	// initialize the data members
+	void initData();
 
-    // calculate vertex normals
-    int calcVertexNormals(GLboolean bFlipNormals = false);
+	// calculate vertex normals
+	int calcVertexNormals(GLboolean bFlipNormals = false);
 
-    // calculate the "display" normals
-    void calcVertexNormalsForDisplay(GLboolean bFlipNormals = false);
+	// calculate the "display" normals
+	void calcVertexNormalsForDisplay(GLboolean bFlipNormals = false);
 
-    // calculate texture coordinates
-    enum class UVType {
-        PLANAR_UV = 0,
-        CYLINDRICAL_UV,
-        SPHERICAL_UV,
-        CUBE_MAPPED_UV
-    };
+	// calculate texture coordinates
+	enum class UVType {
+		PLANAR_UV = 0,
+		CYLINDRICAL_UV,
+		SPHERICAL_UV,
+		CUBE_MAPPED_UV
+	};
 
-    int         calcUVs(Mesh::UVType uvType = Mesh::UVType::PLANAR_UV, bool entity = 0);
-    glm::vec2   calcCubeMap(glm::vec3 vEntity);
+	int         calcUVs(bool Entity, Mesh::UVType uvType = UVType::PLANAR_UV);
+	glm::vec2   calcCubeMap(glm::vec3 vEntity);
 
-//private:
-    std::vector<glm::vec3>    vertexBuffer;
-    std::vector<GLuint>       vertexIndices;
-    std::vector<glm::vec2>    vertexUVs;
-    std::vector<glm::vec3>    vertexNormals, vertexNormalDisplay, faceNormalsDisplay;
+private:
+	std::vector<glm::vec3>    vertexBuffer;
+	std::vector<GLuint>       vertexIndices;
+	std::vector<glm::vec2>    vertexUVs;
+	std::vector<glm::vec3>    vertexNormals, vertexNormalDisplay;
+	std::vector<glm::vec3>    faceNormalsDisplay;
 
-    glm::vec3               boundingBox[2];
-    GLfloat                 normalLength = 0.f;
-
-    bool entityNormal;
+	glm::vec3               boundingBox[2];
+	GLfloat                 normalLength = 0.f;
 };
+
+
+
+#endif //SIMPLE_OBJ_SCENE_MESH_H

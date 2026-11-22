@@ -1,0 +1,80 @@
+CXX := clang++
+BREW_PREFIX ?= /opt/homebrew
+BUILD_DIR := build-macos
+APP_DIR := $(BUILD_DIR)/Reflection.app
+CONTENTS_DIR := $(APP_DIR)/Contents
+MACOS_DIR := $(CONTENTS_DIR)/MacOS
+RESOURCES_DIR := $(CONTENTS_DIR)/Resources
+FRAMEWORKS_DIR := $(CONTENTS_DIR)/Frameworks
+BIN := $(MACOS_DIR)/Reflection.bin
+RAW_BIN := $(BUILD_DIR)/Reflection.bin
+
+CXXFLAGS := -std=c++17 -O2 -Wall -Wextra -Wno-deprecated-declarations \
+	-I"CS300 Project" -IThirdParty -IThirdParty/imgui \
+	-I$(BREW_PREFIX)/include
+
+LDFLAGS := -L$(BREW_PREFIX)/lib -lGLEW -lglfw \
+	-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
+
+PROJECT_SOURCES := \
+	CS300\ Project/Camera.cpp \
+	CS300\ Project/GLApplication.cpp \
+	CS300\ Project/Mesh.cpp \
+	CS300\ Project/OBJLoader.cpp \
+	CS300\ Project/OBJReader.cpp \
+	CS300\ Project/Scene.cpp \
+	CS300\ Project/SceneManager.cpp \
+	CS300\ Project/shader.cpp
+
+IMGUI_SOURCES := \
+	ThirdParty/imgui/imgui.cpp \
+	ThirdParty/imgui/imgui_demo.cpp \
+	ThirdParty/imgui/imgui_draw.cpp \
+	ThirdParty/imgui/imgui_impl_glfw.cpp \
+	ThirdParty/imgui/imgui_impl_opengl3.cpp \
+	ThirdParty/imgui/imgui_tables.cpp \
+	ThirdParty/imgui/imgui_widgets.cpp
+
+.PHONY: all app clean
+
+all: app
+
+app: $(RAW_BIN)
+	mkdir -p "$(MACOS_DIR)" "$(FRAMEWORKS_DIR)" "$(RESOURCES_DIR)/CS300 Project"
+	cp "$(RAW_BIN)" "$(BIN)"
+	cp /opt/homebrew/opt/glew/lib/libGLEW.2.3.dylib "$(FRAMEWORKS_DIR)/"
+	cp /opt/homebrew/opt/glfw/lib/libglfw.3.dylib "$(FRAMEWORKS_DIR)/"
+	install_name_tool -change /opt/homebrew/opt/glew/lib/libGLEW.2.3.dylib \
+		@executable_path/../Frameworks/libGLEW.2.3.dylib "$(BIN)"
+	install_name_tool -change /opt/homebrew/opt/glfw/lib/libglfw.3.dylib \
+		@executable_path/../Frameworks/libglfw.3.dylib "$(BIN)"
+	rm -rf "$(RESOURCES_DIR)/Common"
+	cp -R Common "$(RESOURCES_DIR)/Common"
+	printf '%s\n' \
+		'#!/bin/sh' \
+		'APP_DIR="$$(CDPATH= cd -- "$$(dirname -- "$$0")/.." && pwd)"' \
+		'cd "$$APP_DIR/Resources/CS300 Project"' \
+		'exec "$$APP_DIR/MacOS/Reflection.bin"' \
+		> "$(MACOS_DIR)/Reflection"
+	chmod +x "$(MACOS_DIR)/Reflection"
+	printf '%s\n' \
+		'<?xml version="1.0" encoding="UTF-8"?>' \
+		'<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' \
+		'<plist version="1.0"><dict>' \
+		'<key>CFBundleExecutable</key><string>Reflection</string>' \
+		'<key>CFBundleIdentifier</key><string>local.cs300.reflection</string>' \
+		'<key>CFBundleName</key><string>Reflection</string>' \
+		'<key>CFBundlePackageType</key><string>APPL</string>' \
+		'<key>CFBundleVersion</key><string>1</string>' \
+		'<key>CFBundleShortVersionString</key><string>1.0</string>' \
+		'<key>NSHighResolutionCapable</key><true/>' \
+		'</dict></plist>' \
+		> "$(CONTENTS_DIR)/Info.plist"
+	codesign --force --deep --sign - "$(APP_DIR)"
+
+$(RAW_BIN): $(PROJECT_SOURCES) $(IMGUI_SOURCES)
+	mkdir -p "$(BUILD_DIR)"
+	$(CXX) $(CXXFLAGS) $(PROJECT_SOURCES) $(IMGUI_SOURCES) -o "$@" $(LDFLAGS)
+
+clean:
+	rm -rf "$(BUILD_DIR)"

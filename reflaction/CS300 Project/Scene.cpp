@@ -3,12 +3,12 @@ Copyright (C) 2021 DigiPen Institute of Technology.
 Reproduction or disclosure of this file or its contents without the prior written
 consent of DigiPen Institute of Technology is prohibited.
 File Name: Scene.cpp
-Purpose: control scene
-Language: C++, Visual Studio 2019
-Platform: Visual Studio 2019 16.11.2, Windows 10
-Project: CS300 Project
-Author: Hagyeong Kim (hagyeong.kim@digipen.edu, 180002221) //using framework
-Creation date: 10/15/2021
+Purpose: source file for scene and it controls the derived class.
+Language: C++
+Platform: VisualStudio 2019 / Window
+Project: uijin.lee_CS300_3
+Author: Uijin Lee, uijn.lee, 180003221
+Creation date: Nov 11st, 2021
 End Header --------------------------------------------------------*/
 #include "Scene.h"
 Scene::Scene()
